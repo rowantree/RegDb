@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+        <div class="container">
+            <h2>Dynamic Tabs</h2>
+
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#home" >Home</a></li>
+                <li><a data-toggle="tab" href="#menu1" >Menu 1</a></li>
+                <li><a data-toggle="tab" href="#menu2" >Menu 2</a></li>
+                <li><a data-toggle="tab" href="#search" >Search</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade in active" >
+                    <h2>Home</h2>
+                    <blockquote>This is tab A (blockquote)</blockquote>
+                </div>
+
+                <div id="menu1" class="tab-pane fade" >
+                    <code>This is tab B (code)</code>
+                </div>
+
+                <div id="menu2" class="tab-pane fade"  >
+                    This is tab C
+                </div>
+
+                <div id="search" class="tab-pane fade"  >
+                    <div class="row">
+                        <div class="col-md-2">First Name</div>
+                        <div class="col-md-6"><input type="text"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">Last Name</div>
+                        <div class="col-md-6"><input type="text"></div>
+                    </div>
+                    <div class="row text-center">
+                        <button class="btn">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</body>
+</body>
+</html>

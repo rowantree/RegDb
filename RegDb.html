@@ -1,0 +1,231 @@
+<html><head>
+	<meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+	<title>Event Registration</title>
+
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+
+	<script src="http://code.angularjs.org/1.5.7/angular.js"></script>
+    <script src="http://code.angularjs.org/1.5.7/angular-cookies.min.js"></script>
+
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.1.4.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <script src="js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="RegDb.js"></script>
+
+</head>
+
+<body style="margin:10px">
+	<div ng-app="EventRegApp">
+		<div ng-controller="RegController as reg">
+            <h2 class="text-center">Registration for {{reg.searchData.event}}</h2>
+            <div class="bg-info"> {{reg.userMsg}} </div>
+
+            <script type="text/ng-template" id="AddNoteDialog.html">
+                <div style="margin: 5px;">
+                    <div class="model-header">
+                        <h4>Add Note</h4>
+                    </div>
+                    <div class="modal-body">
+                        <textarea ng-model="$ctrl.NoteText" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="model-footer">
+                        <button class="btn" ng-click="$ctrl.cancel()">Cancel</button>
+                        <button class="btn" ng-click="$ctrl.ok()">Ok</button>
+                    </div>
+                </div>
+            </script>
+
+            <script type="text/ng-template" id="AddPaymentDialog.html">
+                <div style="margin: 5px;">
+                    <div class="model-header">
+                        <h4>Add Payment</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-2">Date</div>
+                            <div class="col-md-6"><input type="date" class="form-control" ng-model="$ctrl.date"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">Amount</div>
+                            <div class="col-md-6"><input type="text" class="form-control" ng-model="$ctrl.amount"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">Type</div>
+                            <div class="col-md-6">
+                                <div class="radio">
+                                    <label><input type="radio" name="paytype" value="check">Check</label>
+                                    <label><input type="radio" name="paytype" value="paypal">PayPal</label>
+                                    <label><input type="radio" name="paytype" value="other">Other</label>
+                                </div>
+                            </div>
+                        </div>
+                        <textarea ng-model="$ctrl.NoteText" class="form-control" rows="3" placeholder="Optional Note About Payment"></textarea>
+                    </div>
+
+                    <div class="model-footer">
+                        <button class="btn" ng-click="$ctrl.cancel()">Cancel</button>
+                        <button class="btn" ng-click="$ctrl.ok()">Ok</button>
+                    </div>
+
+                </div>
+            </script>
+
+            <div class="col-md-2 scrollable-menu scrollbar" role="menu">
+                <div ng-repeat="(key,data) in reg.registration">
+                    <button style="margin:5px 5px 5px 5px" class="btn btn-block btn-sm" type="button" ng-click="reg.ShowReg(key)">{{data.firstName}} {{data.lastName}}</button>
+                </div>
+			</div>
+			<div class="container col-md-10">
+
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#home" >Home</a></li>
+                    <li><a data-toggle="tab" href="#menu1" >Menu 1</a></li>
+                    <li><a data-toggle="tab" href="#menu2" >Menu 2</a></li>
+                    <li><a data-toggle="tab" href="#filter" >Filter</a></li>
+                </ul>
+
+				<div class="tab-content">
+
+
+                    <div id="home" class="tab-pane fade in active" ng-show="reg.detail.regID > 0">
+                        <div class="row">
+                            <div class="col-md-2">Name</div>
+                            <div class="col-md-6">{{reg.detail.firstName}} {{reg.detail.lastName}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">Address</div>
+                            <div class="col-md-6">
+                                <address>
+                                {{reg.detail.address}}<br />
+                                {{reg.detail.city}} {{reg.detail.state}} {{reg.detail.zipcode}}<br />
+                                {{reg.detail.country}}
+                                </address>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">Phone</div>
+                            <div class="col-md-6">{{reg.detail.bestPhone}}</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-2">Email</div>
+                            <div class="col-md-6"><a href="mailto:{{reg.detail.email}}">{{reg.detail.email}}</a></div>
+                        </div>
+
+                        <h3>Special Notes <button type="button" class="btn btn-info btn-sm" ng-click="reg.OpenNote()"><span class="glyphicon glyphicon-plus"></span></button></h3>
+                        <div class="row">
+                            <div class="col-md-2">Needs</div>
+                            <div class="col-md-6">{{reg.detail.needs}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">Notes</div>
+                            <div class="col-md-6" style="white-space:pre-wrap">{{reg.detail.Notes}}</div>
+                        </div>
+
+                        <h3>Housing</h3>
+                        <div class="row">
+                            <div class="col-md-2">Housing</div>
+                            <div class="col-md-6">{{reg.detail.housing}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">Group</div>
+                            <div class="col-md-6">{{reg.detail.group_name}}</div>
+                        </div>
+
+                        <h3>Payments <button type="button" class="btn btn-info btn-sm" ng-click="reg.OpenPayment()"><span class="glyphicon glyphicon-plus"></span></button></h3>
+
+                        <div class="row">
+                            <div class="col-md-2">Reg Cost</div>
+                            <div class="col-md-6">{{reg.detail.calculatedAmount | currency}}</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-2">Amount Paid</div>
+                            <div class="col-md-6">{{reg.detail.amountPaid | currency}}</div>
+                        </div>
+
+                        <table class="table">
+                            <tr>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Type</th>
+                            </tr>
+                            <tr ng-repeat="payment in reg.detail.PAYMENT">
+                                <td>{{payment.Date | date}}</td>
+                                <td>{{payment.Amount | currency}}</td>
+                                <td>{{payment.Type}}</td>
+                            </tr>
+                        </table>
+
+                        <h3>Reg Option</h3>
+                        <div class="row">
+                            <div class="col-md-2">Reg Date</div>
+                            <div class="col-md-6">{{reg.detail.regDate}}</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-2">Reg Option</div>
+                            <div class="col-md-6">{{reg.detail.optionCode}}</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-2">Meal Plan</div>
+                            <div class="col-md-6">{{reg.detail.PEOPLE[0].mealPlan}}</div>
+                        </div>
+
+                        <h3 ng-show="reg.detail.PEOPLE.length > 1">Additional People</h3>
+                        <div ng-repeat="person in reg.detail.PEOPLE | filter: person.idx > 0">
+                            <div class="row">
+                                <div class="col-md-2">Name</div>
+                                <div class="col-md-6">{{person.firstName}} {{person.lastName}}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="menu1" class="tab-pane fade" >
+                        <code>This is tab B (code)</code>
+                    </div>
+
+                    <div id="menu2" class="tab-pane fade"  >
+                        This is tab C
+                    </div>
+
+                    <div id="filter" class="tab-pane fade"  >
+
+                            <div class="row">
+                                <div class="col-md-2">Event</div>
+                                <div class="col-md-6">
+                                    <select ng-model="reg.searchData.event" ng-change="reg.SetEvent()">
+                                        <option ng-repeat="eventData in reg.events" value="{{eventData.event}}">{{eventData.event}}</option>
+
+                                    </select>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-2">First Name</div>
+                                <div class="col-md-6"><input type="text" ng-model="reg.searchData.firstName"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">Last Name</div>
+                                <div class="col-md-6"><input type="text" ng-model="reg.searchData.lastName"></div>
+                            </div>
+                            <div class="row text-center">
+                                <button class="btn" ng-click="reg.Search()">Search</button>
+                            </div>
+
+
+
+                    </div>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>
