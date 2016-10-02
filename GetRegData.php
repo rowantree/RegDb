@@ -1,5 +1,5 @@
 <?php
-include_once "../common/OpenDb.php";
+include_once "common.php";
 
 /*
 TraceMsg("Post Dump");
@@ -45,6 +45,8 @@ if ( $_SERVER["REQUEST_METHOD"] == "POST")
     }
 }
 
+$data = new stdClass();
+$data->SQL = new stdClass();
 
 $db = OpenPDO();
 
@@ -52,18 +54,7 @@ $regSql = "SELECT * FROM registration $where ORDER BY firstName, lastName";
 
 
 TraceMsg($regSql);
-$stmt = $db->query($regSql);
-if (!$stmt) {
-    TraceMsg($regSql);
-    $msg = print_r($db->errorInfo(), true);
-    TraceMsg($msg);
-    echo "$regSql<br>";
-    echo str_replace("\n", "<br>", $msg);
-    die('Invalid query');
-}
-
-$data = new stdClass();
-$data->SQL = new stdClass();
+$stmt = RunSql($db, $regSql);
 
 $data->SQL->regSql = $regSql;
 $data->registration = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -74,16 +65,7 @@ if ( strlen($where) > 0 ) $personSql .= " WHERE regID IN (SELECT regID FROM regi
 $personSql .= " ORDER BY regID, idx";
 
 TraceMsg($personSql);
-$stmt = $db->query($personSql);
-if (!$stmt) {
-    TraceMsg($personSql);
-    $msg = print_r($db->errorInfo(), true);
-    TraceMsg($msg);
-    echo "$personSql<br>";
-    echo str_replace("\n", "<br>", $msg);
-    die('Invalid query');
-}
-
+$stmt = RunSql($db, $personSql);
 $data->SQL->personSql = $personSql;
 
 $people = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -112,18 +94,8 @@ if ( strlen($where) > 0 ) $paymentSql .= " WHERE regID IN (SELECT regID FROM reg
 $paymentSql .= " ORDER BY regID";
 
 TraceMsg($paymentSql);
-$stmt = $db->query($paymentSql);
-if (!$stmt) {
-    TraceMsg($paymentSql);
-    $msg = print_r($db->errorInfo(), true);
-    TraceMsg($msg);
-    echo "$paymentSql<br>";
-    echo str_replace("\n", "<br>", $msg);
-    die('Invalid query');
-}
-
+$stmt = RunSql($db, $paymentSql);
 $data->SQL->paymentSql = $paymentSql;
-
 $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 foreach( $payments as $payment )
@@ -142,8 +114,3 @@ foreach( $payments as $payment )
 }
 
 echo json_encode($data);
-
-function TraceMsg($msg)
-{
-    error_log( date('[ymd-His]') . ':' .$msg . "\n", 3, "trace.log");
-}

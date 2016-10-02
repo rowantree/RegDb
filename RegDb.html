@@ -20,6 +20,7 @@
 	<div ng-app="EventRegApp">
 		<div ng-controller="RegController as reg">
             <h2 class="text-center">Registration for {{reg.searchData.event}}</h2>
+			Database: {{reg.config.databaseName}}<br>
             <div class="bg-info"> {{reg.userMsg}} </div>
 
             <script type="text/ng-template" id="AddNoteDialog.html">
@@ -82,12 +83,16 @@
 
                 <ul class="nav nav-tabs">
                     <li class="active"><a data-toggle="tab" href="#home" >Home</a></li>
-                    <li><a data-toggle="tab" href="#menu1" >Menu 1</a></li>
+                    <li><a data-toggle="tab" href="#summary" >Summary</a></li>
                     <li><a data-toggle="tab" href="#menu2" >Menu 2</a></li>
                     <li><a data-toggle="tab" href="#filter" >Filter</a></li>
                 </ul>
 
 				<div class="tab-content">
+
+                    <!--
+                    ** Summary
+                    -->
 
 
                     <div id="home" class="tab-pane fade in active" ng-show="reg.detail.regID > 0">
@@ -115,50 +120,63 @@
                             <div class="col-md-6"><a href="mailto:{{reg.detail.email}}">{{reg.detail.email}}</a></div>
                         </div>
 
-                        <h3>Special Notes <button type="button" class="btn btn-info btn-sm" ng-click="reg.OpenNote()"><span class="glyphicon glyphicon-plus"></span></button></h3>
-                        <div class="row">
-                            <div class="col-md-2">Needs</div>
-                            <div class="col-md-6">{{reg.detail.needs}}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2">Notes</div>
-                            <div class="col-md-6" style="white-space:pre-wrap">{{reg.detail.Notes}}</div>
-                        </div>
+                        <h3>Special Notes <button type="button" class="btn btn-info btn-sm" ng-click="reg.OpenNote()"><span class="glyphicon glyphicon-plus"></span></button>
+						<button class="btn" data-toggle="collapse" data-target="#notes"><span class="glyphicon glyphicon-menu-down"></span></button>
+						</h3>
+						<div id="notes" class="collapse">
+							<div class="row">
+								<div class="col-md-2">Needs</div>
+								<div class="col-md-6">{{reg.detail.needs}}</div>
+							</div>
+							<div class="row">
+								<div class="col-md-2">Notes</div>
+								<div class="col-md-6" style="white-space:pre-wrap">{{reg.detail.Notes}}</div>
+							</div>
+						</div>
 
-                        <h3>Housing</h3>
-                        <div class="row">
-                            <div class="col-md-2">Housing</div>
-                            <div class="col-md-6">{{reg.detail.housing}}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2">Group</div>
-                            <div class="col-md-6">{{reg.detail.group_name}}</div>
-                        </div>
+						<h3>Housing
+						<button class="btn" data-toggle="collapse" data-target="#housing"><span class="glyphicon glyphicon-menu-down"></span></button>
+							</h3>
+							<div id="housing" class="collapse">
+								<div class="row">
+									<div class="col-md-2">Housing</div>
+									<div class="col-md-6">{{reg.detail.housing}}</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">Group</div>
+									<div class="col-md-6">{{reg.detail.group_name}}</div>
+								</div>
+							</div>
 
-                        <h3>Payments <button type="button" class="btn btn-info btn-sm" ng-click="reg.OpenPayment()"><span class="glyphicon glyphicon-plus"></span></button></h3>
+                        <h3>Payments <button type="button" class="btn btn-info btn-sm" ng-click="reg.OpenPayment()"><span class="glyphicon glyphicon-plus"></span></button>
+						<button class="btn" data-toggle="collapse" data-target="#payments"><span class="glyphicon glyphicon-menu-down"></span></button>
+						</h3>
 
-                        <div class="row">
-                            <div class="col-md-2">Reg Cost</div>
-                            <div class="col-md-6">{{reg.detail.calculatedAmount | currency}}</div>
-                        </div>
+						<div id="payments" class="collapse">
 
-                        <div class="row">
-                            <div class="col-md-2">Amount Paid</div>
-                            <div class="col-md-6">{{reg.detail.amountPaid | currency}}</div>
-                        </div>
+							<div class="row">
+								<div class="col-md-2">Reg Cost</div>
+								<div class="col-md-6">{{reg.detail.calculatedAmount | currency}}</div>
+							</div>
 
-                        <table class="table">
-                            <tr>
-                                <th>Date</th>
-                                <th>Amount</th>
-                                <th>Type</th>
-                            </tr>
-                            <tr ng-repeat="payment in reg.detail.PAYMENT">
-                                <td>{{payment.Date | date}}</td>
-                                <td>{{payment.Amount | currency}}</td>
-                                <td>{{payment.Type}}</td>
-                            </tr>
-                        </table>
+							<div class="row">
+								<div class="col-md-2">Amount Paid</div>
+								<div class="col-md-6">{{reg.detail.amountPaid | currency}}</div>
+							</div>
+
+							<table class="table">
+								<tr>
+									<th>Date</th>
+									<th>Amount</th>
+									<th>Type</th>
+								</tr>
+								<tr ng-repeat="payment in reg.detail.PAYMENT">
+									<td>{{payment.Date | date}}</td>
+									<td>{{payment.Amount | currency}}</td>
+									<td>{{payment.Type}}</td>
+								</tr>
+							</table>
+						</div>
 
                         <h3>Reg Option</h3>
                         <div class="row">
@@ -185,8 +203,49 @@
                         </div>
                     </div>
 
-                    <div id="menu1" class="tab-pane fade" >
-                        <code>This is tab B (code)</code>
+                    <div id="summary" class="tab-pane fade" >
+
+                        <div class="row">
+                            <div class="col-md-2">Registrations</div>
+                            <div class="col-md-6">{{reg.eventSummary.regCount}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">People</div>
+                            <div class="col-md-6">{{reg.eventSummary.personCount}}</div>
+                        </div>
+                        <h3>Registration Types</h3>
+                        <div class="row">
+                            <table class="table">
+                                <tr ng-repeat="data in reg.eventSummary.regOptionCount">
+                                    <th>{{reg.config.RegOptions[data.optionCode]}}</th>
+                                    <td>{{data.cnt}}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <h3>Meal Plan Count</h3>
+                        <div class="row">
+                            <table class="table">
+                                <tr ng-repeat="data in reg.eventSummary.mealPlanCount">
+                                    <th>{{reg.config.MealPlanOptions[data.mealPlan]}}</th>
+                                    <td>{{data.cnt}}</td>
+                                </tr>
+
+                            </table>
+                        </div>
+
+                        <h3>Age Count</h3>
+                        <div class="row">
+                            <table class="table">
+                                <tr ng-repeat="data in reg.eventSummary.ageCount">
+                                    <th>{{data.age}}</th>
+                                    <td>{{data.cnt}}</td>
+                                </tr>
+
+                            </table>
+                        </div>
+
+                        <button class="btn btn-sm" type="button" ng-click="reg.GetSummary()">Get Summary</button>
                     </div>
 
                     <div id="menu2" class="tab-pane fade"  >

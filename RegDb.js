@@ -7,43 +7,11 @@
     {
     	var $ctrl = this;
 
-		/*
-    	this.Save = function()
-		{
-			var scope = this;
-			this.userMsg = "Saving Data";
-			var request = '';
-			for(var i = 0, len = this.clanData.length; i<len; ++i)
-			{
-				var data = this.clanData[i];
-				if ( data.AssignedClan != data.NewAssignment )
-				{
-					request += data.regID + '=' + data.NewAssignment + '&'
-				}
-			}
-			if (request != '')
-			{
-				$http.get("SaveClanData.php?" + request)
-					.then(function (response)
-				{
-				    if ( response.data == 'Ok' )
-					{
-						scope.Reload();
-					}
-					else
-                    {
-                    	scope.userMsg = "Unable to save:" + response.data;
-					}
-				});
-			}
-
-		}
-		*/
-
 		this.ShowReg = function(key)
 		{
 			this.userMsg = "Show:" + key;
 			this.detail = this.registration[key];
+			$('.nav-tabs a[href="#home"]').tab('show')
 		}
 
 		this.Search = function()
@@ -149,7 +117,20 @@
 				.then(function(response)
 				{
 					scope.events = response.data.events;
+					scope.config = response.data.config;
 					scope.userMsg = "Startup Loaded";
+				});
+		}
+
+		this.GetSummary = function()
+		{
+			this.userMsg = "GetSummary:" +  $filter('date')(new Date(),'yyyy-MM-dd HH:mm:ss Z');
+			var scope = this;
+			$http.get("GetEventSummary.php?event=" + this.searchData.event)
+				.then(function(response)
+				{
+					scope.eventSummary = response.data;
+					scope.userMsg = "Summary Loaded";
 				});
 		}
 
@@ -160,6 +141,7 @@
 
 
 
+		this.config = {};
 		this.detail = { regID : 0 };
 		this.searchData = {};
 		this.searchData.firstName = "Ste";
@@ -169,6 +151,7 @@
 		this.NoteText = "This is note text";
 
 		this.GetStartupData();
+		$('.nav-tabs a[href="#filter"]').tab('show')
 	});
 
 	myApp.controller('AddNoteDialogCtrl', function ($uibModalInstance, NoteText)
